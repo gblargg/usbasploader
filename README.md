@@ -13,11 +13,11 @@ Sections:
 * Features
 * Requirements
 * Configuration
-* Automatic device configuration
+* Bootloader entry/exit
+* Bootloader custom entry/exit
 * Self-update
-* Bootloader invocation examples
-* Bootloader invocation reference
 * Code size
+* Automatic device configuration
 * Differences from original USBaspLoader
 * Design
 * Development
@@ -104,30 +104,30 @@ Without any configuration, the bootloader will run on reset and wait indefinitel
 
 * No button/jumper w/ USB: When turned on, immediately enters USBasp mode. If no activity for 4 seconds, automatically exits and runs program. Good when your program also uses USB.
 
-	#define BOOTLOADER_ON_POWER 1
+        #define BOOTLOADER_ON_POWER 1
 
 * No button/jumper: Same as above but only when USB is connected; otherwise your program runs immediately. Good when your program doesn't use USB.
 
-	#define BOOTLOADER_ON_USB 1
+        #define BOOTLOADER_ON_USB 1
 
 * No button/jumper: When turned on, runs program normally. When you do something defined by the program, it directly runs the bootloader.
 
-    #define BOOTLOADER_ON_WDT 1
-    
-    // when you want to enter bootloader from your program:
-    cli();
-    wdt_enable( WDTO_15MS );
-    while ( 1 ) { }
+        #define BOOTLOADER_ON_WDT 1
+        
+        // when you want to enter bootloader from your program:
+        cli();
+        wdt_enable( WDTO_15MS );
+        while ( 1 ) { }
 
 * Reset button: When turned on, runs program normally. When reset button is pressed, enters USBasp mode.
 
-    #define BOOTLOADER_ON_RESET 1
+        #define BOOTLOADER_ON_RESET 1
 
 * Jumper: When started without jumper, runs program normally. When started with jumper in place, enters USBasp mode.
 
-    #define BOOTLOADER_ON_JUMPER 1
-    #define BOOTLOADER_JUMPER_PORT B
-    #define BOOTLOADER_JUMPER_BIT 2
+        #define BOOTLOADER_ON_JUMPER 1
+        #define BOOTLOADER_JUMPER_PORT B
+        #define BOOTLOADER_JUMPER_BIT 2
 
 
 Bootloader custom entry/exit
