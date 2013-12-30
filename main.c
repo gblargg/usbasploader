@@ -59,13 +59,17 @@ union currentAddress_t {
 	#define GLOBAL_REG( r, type, name, init ) static type name = init
 #endif
 
+// Effective number of clocks per iteration of main loop. Empirically timed.
+// Accounts for USB interrupts. Oddly same regardless of GLOBAL_REGS.
+enum { main_loop_clk = 28 };
+
 static union currentAddress_t currentAddress; // in bytes
 GLOBAL_REG( r3, uchar, bytesRemaining, 0 );
 GLOBAL_REG( r4, uchar, isLastPage, 0 ); // needs to be masked with 0x02
 #if AUTO_EXIT_NO_USB_MS
 	GLOBAL_REG( r5, uchar, currentRequest, USBASP_FUNC_DISCONNECT );
 	GLOBAL_REG( r6, uchar, timeoutHigh,
-			F_CPU/(USE_GLOBAL_REGS ? 30 : 45) / 1000 * (AUTO_EXIT_NO_USB_MS) / 0x10000 );
+			F_CPU/main_loop_clk / 1000 * (AUTO_EXIT_NO_USB_MS) / 0x10000 );
 #else
 	GLOBAL_REG( r5, uchar, currentRequest, 0 );
 #endif
@@ -405,7 +409,7 @@ int main( void )
 	#if AUTO_EXIT_MS
 		#define DBG1( a, b, c ) {\
 			if ( (a) == 0xff )\
-				timeoutHigh = F_CPU/(USE_GLOBAL_REGS ? 30 : 45) / 1000 * (AUTO_EXIT_MS) / 0x10000;\
+				timeoutHigh = F_CPU/main_loop_clk / 1000 * (AUTO_EXIT_MS) / 0x10000;\
 		}
 	#else
 		#define DBG1( a, b, c ) {\
