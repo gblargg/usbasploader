@@ -116,14 +116,14 @@
 	static void bootLoaderExit( void ) { }
 #endif
 
-#if LED_PRESENT
-	#define LED_INIT()		{ }
-	#define LED_EXIT()		{ USB_DDRPORT(LED_PORT) &= ~(1<<LED_BIT); }
-	#define LED_BLINK()		{ USB_DDRPORT(LED_PORT) ^=  (1<<LED_BIT); }
-#else
+#if !LED_PRESENT
 	#define LED_INIT()		
 	#define LED_EXIT()		
 	#define LED_BLINK()		
+#elif !defined(LED_BLINK)
+	#define LED_INIT()		{ }
+	#define LED_EXIT()		{ USB_DDRPORT(LED_PORT) &= ~(1<<LED_BIT); }
+	#define LED_BLINK()		{ USB_DDRPORT(LED_PORT) ^=  (1<<LED_BIT); }
 #endif
 
 //**** Defaults/constraints
